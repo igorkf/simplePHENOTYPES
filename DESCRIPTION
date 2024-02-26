@@ -29,9 +29,11 @@ Imports:
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0)
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 URL: https://github.com/samuelbfernandes/simplePHENOTYPES
 BugReports: https://github.com/samuelbfernandes/simplePHENOTYPES/issues
 NeedsCompilation: no
+Config/testthat/edition: 3
