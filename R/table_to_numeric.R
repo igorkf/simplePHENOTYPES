@@ -24,7 +24,7 @@ table_to_numeric <-
            model = "Add",
            impute = "None",
            method = "frequency",
-           verbose = NULL) {
+           verbose = FALSE) {
     #---------------------------------------------------------------------------
     if (verbose) message("Numericalization in Progress...")
     colnames <- colnames(xx)
@@ -37,8 +37,7 @@ table_to_numeric <-
       Aa <- 1
       aa <- 0
     } else {
-      stop("\'code_as\' should be either \"-101\" or \"012\".",
-           call. = F)
+      stop("\'code_as\' should be either \"-101\" or \"012\".")
     }
     if (method == "frequency") {
       xx_n <-  apply(xx, 1, function(o){
@@ -54,8 +53,7 @@ table_to_numeric <-
       })
     } else if (method == "reference") {
       if (length(ref_allele) != nrow(xx)) {
-        stop("The reference allele information should have the same length as the number of markers.",
-             call. = F)
+        stop("The reference allele information should have the same length as the number of markers.")
       }
       xx$reference_allele <- ref_allele
       xx_n <-  apply(xx, 1, function(i) {
@@ -71,8 +69,7 @@ table_to_numeric <-
                      aa = aa)
       })
     } else {
-      stop("\'method\' should be either \"frequency\" or \"reference\".",
-           call. = F)
+      stop("\'method\' should be either \"frequency\" or \"reference\".")
     }
     xx_n <- t(xx_n)
     colnames(xx_n) <- colnames
@@ -89,8 +86,9 @@ make_numeric <- function (a,
                           AA = NULL,
                           Aa = NULL,
                           aa = NULL) {
+  
   if (method == "frequency") {
-    a[!a %in% c(homo, hets)] <- NA
+    a[!a %in% c(homo, hets)] <- "[OTHER]"
     a <- as.factor(a)
     count <- tabulate(a)
     names(count) <- levels(a)
@@ -124,7 +122,7 @@ make_numeric <- function (a,
     }
     return(a)
   } else if (method == "reference")  {
-    a[!a %in% c(homo, hets)] <- NA
+    a[!a %in% c(homo, hets)] <- "[OTHER]"
     count <- length(unique(a))
     if (count > 3) {
       print("non-biallelic SNP set to NA")
@@ -166,8 +164,5 @@ make_numeric <- function (a,
       cat("Please consider specialized software for more accurate genotype imputation.\n")
     }
     return(a)
-  } else {
-    stop("The method for numericalization should be either \"reference\" or \"frequency\".",
-         call. = F)
   }
 }

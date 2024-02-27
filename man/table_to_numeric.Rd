@@ -13,7 +13,7 @@ table_to_numeric(
   model = "Add",
   impute = "None",
   method = "frequency",
-  verbose = NULL
+  verbose = FALSE
 )
 }
 \arguments{

@@ -7,4 +7,6 @@ src/*.o
 src/*.so
 src/*.dll
 
-data/test.vcf
+# test related
+R/test.R
+inst/test*
