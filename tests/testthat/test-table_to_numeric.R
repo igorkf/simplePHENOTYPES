@@ -6,6 +6,8 @@ path <- system.file("test.hmp.txt", package = "simplePHENOTYPES")
 xx <- data.table::fread(path, data.table = F)[, -c(1:11)]
 # debug(table_to_numeric)
 # table_to_numeric(xx, method = "frequency")
+# undebug(table_to_numeric)
+
 
 ####################
 # table_to_numeric #
