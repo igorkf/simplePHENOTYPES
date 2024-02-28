@@ -93,7 +93,7 @@ make_numeric <- function (a,
     count <- tabulate(a)
     names(count) <- levels(a)
     if (length(count) > 3 | "[OTHER]" %in% a) {
-      print("non-biallelic SNP set to NA")
+      message("non-biallelic SNP set to NA")
       a <- NA
       return(a)
     }
@@ -125,7 +125,7 @@ make_numeric <- function (a,
     a[!a %in% c(homo, hets)] <- "[OTHER]"
     count <- length(unique(a))
     if (count > 3 | "[OTHER]" %in% a) {
-      print("non-biallelic SNP set to NA")
+      message("non-biallelic SNP set to NA")
       a <- NA
       return(a)
     }
