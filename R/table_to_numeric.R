@@ -26,6 +26,17 @@ table_to_numeric <-
            method = "frequency",
            verbose = FALSE) {
     #---------------------------------------------------------------------------
+
+    hapmap_cols <- c(
+      "rs#", "alleles", "chrom", "pos", "strand", "assembly#",
+      "center", "protLSID", "assayLSID", "panelLSID", "QCcode"
+    )
+    has_hapmap_cols <- all(hapmap_cols %in% colnames(xx))
+    if (has_hapmap_cols) {
+      left_data <- xx[, hapmap_cols]
+      xx[, hapmap_cols] <- NULL
+    }
+
     if (verbose) message("Numericalization in Progress...")
     colnames <- colnames(xx)
     if (code_as == "-101") {
@@ -73,6 +84,11 @@ table_to_numeric <-
     }
     xx_n <- t(xx_n)
     colnames(xx_n) <- colnames
+    if (has_hapmap_cols) {
+      xx_n <- cbind(left_data, xx_n)
+    } else {
+      xx_n <- as.data.frame(xx_n)
+    }
     return(xx_n)
   }
 

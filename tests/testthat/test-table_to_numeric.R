@@ -1,9 +1,9 @@
 # defaults
 d <- formals(table_to_numeric)
 
-hapmap <- load_hapmap()[, -c(1:11)]
+tab <- load_hapmap()
 # debug(table_to_numeric)
-# table_to_numeric(hapmap, method = "frequency")
+# table_to_numeric(tab, method = "frequency")
 # undebug(table_to_numeric)
 
 
@@ -24,49 +24,71 @@ test_that("default arguments match", {
 
 test_that("verbose shows message", {
   expect_message(
-    table_to_numeric(hapmap, verbose = TRUE), 
+    table_to_numeric(tab, verbose = TRUE), 
     "Numericalization in Progress..."
   )
 })
 
 test_that("code_as invalid raises error", {
   expect_error(
-    table_to_numeric(hapmap, code_as = "123456789"), 
+    table_to_numeric(tab, code_as = "123456789"), 
     "^\'code_as\' should be either \"-101\" or \"012\".$"
   )
 })
 
 test_that("code as -101 has expected possible values", {
-  result <- table_to_numeric(hapmap, code_as = "-101")
-  possible_values <- sort(unique(as.vector(result)))
+  result <- table_to_numeric(tab, code_as = "-101")
+  if (colnames(result)[1] == "rs#") {
+    result <- result[, -c(1:11)]  # remove hapmap first cols
+  }
+  possible_values <- sort(unique(unlist(as.vector(result))))
   expect_equal(possible_values, c(-1, 0, 1))
 })
 
 test_that("code as 012 has expected possible values", {
-  result <- table_to_numeric(hapmap, code_as = "012")
-  possible_values <- sort(unique(as.vector(result)))
+  result <- table_to_numeric(tab, code_as = "012")
+  if (colnames(result)[1] == "rs#") {
+    result <- result[, -c(1:11)]  # remove hapmap first cols
+  }
+  possible_values <- sort(unique(unlist(as.vector(result))))
   expect_equal(possible_values, c(0, 1, 2))
 })
 
 test_that("method invalid raises error", {
   expect_error(
-    table_to_numeric(hapmap, method = "ABCDEFG"), 
+    table_to_numeric(tab, method = "ABCDEFG"), 
     "^\'method\' should be either \"frequency\" or \"reference\".$"
   )
 })
 
 test_that("method invalid raises error", {
   expect_error(
-    table_to_numeric(hapmap, method = "ABCDEFG"), 
+    table_to_numeric(tab, method = "ABCDEFG"), 
     "^\'method\' should be either \"frequency\" or \"reference\".$"
   )
 })
 
 test_that("ref_allele invalid length raises error", {
   expect_error(
-    table_to_numeric(hapmap, method = "reference"),
+    table_to_numeric(tab, method = "reference"),
     "^The reference allele information should have the same length as the number of markers.$"
   )
+})
+
+test_that("passing hapmap columns outputs hapmap columns", {
+  result <- table_to_numeric(tab)
+  hapmap_cols <- c(
+    "rs#", "alleles", "chrom", "pos", "strand", "assembly#",
+    "center", "protLSID", "assayLSID", "panelLSID", "QCcode"
+  )
+  expect_in(hapmap_cols, colnames(result))
+})
+
+test_that("output class is data.frame", {
+  result <- table_to_numeric(tab)
+  expect_equal(inherits(result, "data.frame"), TRUE)
+  result <- table_to_numeric(tab[, -c(1:11)])  # remove hapmap first cols
+  expect_equal(inherits(result, "data.frame"), TRUE)
 })
 
 
@@ -77,7 +99,7 @@ test_that("ref_allele invalid length raises error", {
 test_that("non-biallelic SNP returns NA", {
   for (method in c("frequency", "reference")) {
     set.seed(1)
-    snp <- unlist(hapmap[1, ])  # only first SNP
+    snp <- unlist(tab[1, ])  # only first SNP
     random_idxs <- sample(1:length(snp), size = as.integer(length(snp) / 2))
     snp[random_idxs] <- "ABCDEFG"
     expect_message(
