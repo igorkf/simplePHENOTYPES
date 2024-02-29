@@ -1,6 +1,6 @@
 # filenames
-# hapmap_fn <- system.file("test.hmp.txt", package = "simplePHENOTYPES")
-# vcf_fn <- system.file("test.vcf", package = "simplePHENOTYPES")
+hapmap_fn <- system.file("test.hmp.txt", package = "simplePHENOTYPES")
+vcf_fn <- system.file("test.vcf", package = "simplePHENOTYPES")
 
 # objects
 # hapmap <- data.table::fread(f1, data.table = F)
@@ -11,7 +11,10 @@
 # as_numeric #
 ##############
 
-# test_that("")
+test_that("hapmap returns a data.frame", {
+  tab <- as_numeric(hapmap_fn)
+  expect_equal(inherits(tab, "data.frame"), TRUE)
+})
 
 # transformed from filenames
 # hapmap_num <- as_numeric(f1)
