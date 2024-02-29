@@ -1,19 +1,15 @@
 #' @export
+#' @param x filename as a string.
 as_numeric <- function(x, ...) {
-  
-  # convert from a filename
-  if (inherits(x, "character")) {
-    if (endsWith(x, ".hmp.txt")) {
-      tab <- data.table::fread(x, data.table = F)
-      result <- table_to_numeric(tab, ...)
-    }
-    if (endsWith(x, ".vcf")) {
-      tab <- vcf_to_numeric(x, ...)
-    }
-    
-  # convert from an object
+  if (endsWith(x, ".hmp.txt")) {
+    tab <- data.table::fread(x, data.table = F)
+    result <- table_to_numeric(tab, ...)
+  }
+  else if (endsWith(x, ".vcf")) {
+    tab <- vcf_to_numeric(x, ...)
   } else {
-    tab <- table_to_numeric(x, ...)
+    ext <- tools::file_ext(x)
+    stop(paste0("The extension \"", ext, "\" is not implemented."))
   }
   return(tab)
 }
