@@ -1,35 +1,39 @@
-#' Converts character SNP genotype to numerical (-1, 0, 1) were 1 is the major allele
 #' @export
-#' @param x ggg
-#' @param ... ...
-#' @return Corresponding numerical value
-#' Last update: Apr 13, 2021
-#'--------------------------as_numeric---------------------------------
-as_numeric <-
-  function(x, ...) {
-    tryCatch({
-      if (all(class(x) == "character")) {
-        f_name <- NULL
-        format_conversion(file = x ,
-                          to = "numeric",
-                          f_name = f_name,
-                          ...)
-      } else {
-        f_name <- deparse(substitute(x))
-        format_conversion(
-          file = x,
-          to = "numeric",
-          f_name = f_name,
-          ...
-        )
-      }
-    },
-    error = function(cnd) {
-      message(cnd)
-      message("\nFor help, please look at...")
-    },
-    interrupt = function(int) {
-      msg <- "\nFor help, please look at..."
-      rlang::inform(msg, .frequency = "once", .frequency_id = msg)
-    })
+as_numeric <- function(x, ...) {
+  
+  # convert from a filename
+  if (inherits(x, "character")) {
+    if (endsWith(x, ".hmp.txt")) {
+      tab <- data.table::fread(x, data.table = F)
+      result <- table_to_numeric(tab, ...)
+    }
+    if (endsWith(x, ".txt") | endsWith(x, ".csv") ) {
+      
+    }
+    if (endsWith(x, ".vcf")) {
+      tab <- vcf_to_numeric(x, ...)
+    }
+    
+  # convert from an object
+  } else {
+    tab <- table_to_numeric(x, ...)
   }
+  return(tab)
+}
+
+
+# filenames
+f1 <- system.file("test.hmp.txt", package = "simplePHENOTYPES")
+f2 <- system.file("test.vcf", package = "simplePHENOTYPES")
+
+# transformed from filenames
+hapmap_num <- as_numeric(f1)
+
+# objects
+hapmap <- data.table::fread(f1, data.table = F)
+tab <- hapmap[, -c(1:11)]  # remove hapmap columns
+
+# transformed from object
+hapmap_num <- as_numeric(hapmap)
+tab_num <- as_numeric(tab)
+
