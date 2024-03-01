@@ -1,9 +1,10 @@
-vcf_to_numeric <- function(file, ...) {
+ped_to_numeric <- function(file, ...) {
+  map_fn <- gsub(".ped$", ".map", file)
   temp <- tempfile(fileext = ".gds")
-  SNPRelate::snpgdsVCF2GDS(
-    vcf.fn = file, 
-    out.fn = temp,
-    method = "copy.num.of.ref",
+  SNPRelate::snpgdsPED2GDS(
+    ped.fn = file,
+    map.fn = map_fn,
+    out.gdsfn = temp,
     snpfirstdim = FALSE,
     verbose = FALSE
   )
