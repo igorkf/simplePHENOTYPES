@@ -68,8 +68,8 @@ test_that("ref_allele invalid length raises error", {
   )
 })
 
-test_that("passing hapmap columns outputs hapmap columns", {
-  result <- table_to_numeric(tab)
+test_that("passing hapmap columns keeps hapmap columns if chosen to not drop", {
+  result <- table_to_numeric(tab, drop_extra_cols = F)
   hapmap_cols <- c(
     "rs#", "alleles", "chrom", "pos", "strand", "assembly#",
     "center", "protLSID", "assayLSID", "panelLSID", "QCcode"
