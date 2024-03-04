@@ -1,5 +1,5 @@
 #' @export
-#' @param x filename as a string or a data.frame object.
+#' @param x filename as a string or a data.frame object. If passing a data.frame, the rows must be individuals and the columns must be SNPs.
 as_numeric <- function(x, ...) {
   
   if (inherits(x, "character")) {
@@ -22,7 +22,6 @@ as_numeric <- function(x, ...) {
     cols <- colnames(x)
     
     # try to guess data structure
-    # TODO: maybe user can say what is the data structure? (e.g. type = "vcf", or type = "hapmap")
     if (cols[1] %in% c("rs#", "snp.rs.id")) {
       result <- table_to_numeric(x, ...)
     } else {
@@ -31,7 +30,7 @@ as_numeric <- function(x, ...) {
           warning(strwrap(prefix = " ", initial = "", 
           "Assuming the data.frame only contains SNPs.
            You can change the reference allele using the argument \"ref_allele\"
-           and change the possible hetero and homozygote genotypes from the arguments
+           and the possible hetero and homozygote genotypes from the arguments
           \"hets\" and \"homo\"."))
         },
         table_to_numeric(x, ...)
