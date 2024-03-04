@@ -23,7 +23,8 @@ table_to_numeric <- function(xx,
                              model = "Add",
                              impute = "None",
                              method = "frequency",
-                             verbose = FALSE) {
+                             verbose = FALSE,
+                             drop_extra_cols = TRUE) {
   #---------------------------------------------------------------------------
   
   hapmap_cols <- c(
@@ -93,7 +94,7 @@ table_to_numeric <- function(xx,
   }
   xx_n <- t(xx_n)
   colnames(xx_n) <- cols
-  if (has_extra_cols) {
+  if (has_extra_cols & drop_extra_cols == F) {
     xx_n <- cbind(left_data, xx_n)
   } else {
     xx_n <- as.data.frame(xx_n)
