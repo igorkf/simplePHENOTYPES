@@ -43,5 +43,6 @@ gds_to_numeric <- function(file, code_as = "-101") {
     last_cols <- tail(colnames(result), ncol(tab_geno))
     colnames(result)[colnames(result) %in% last_cols] <- sample.id
   }
+  SNPRelate::snpgdsClose(genofile)
   return(result)
 }
