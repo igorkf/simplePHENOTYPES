@@ -1,5 +1,5 @@
 # defaults
-d <- formals(hapmap_to_numeric)
+d <- formals(table_to_numeric)
 
 tab <- load_hapmap()[-c(1:11)]  # remove hapmap meta columns
 
