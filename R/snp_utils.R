@@ -40,7 +40,8 @@ make_numeric <- function(a,
           a[na] <- AA
         }
       }
-      cat("Please consider specialized software for more accurate genotype imputation.\n")
+      msg <- "Please consider specialized software for more accurate genotype imputation."
+      rlang::inform(msg, .frequency = "once", .frequency_id = msg)
     }
     return(a)
   } else if (method == "reference")  {
@@ -83,7 +84,8 @@ make_numeric <- function(a,
           a[na] <- AA
         }
       }
-      message("Please consider specialized software for more accurate genotype imputation.")
+      msg <- "Please consider specialized software for more accurate genotype imputation."
+      rlang::inform(msg, .frequency = "once", .frequency_id = msg)
     }
     return(a)
   }
