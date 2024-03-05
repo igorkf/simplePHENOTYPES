@@ -1,5 +1,5 @@
 file <- system.file("test.ped", package = "simplePHENOTYPES")
-meta_cols <- c("snp.rs.id", "snp.id", "allele", "chr", "pos", "cm")
+meta_cols <- c("snp", "allele", "chr", "pos", "cm")
 
 
 ##################

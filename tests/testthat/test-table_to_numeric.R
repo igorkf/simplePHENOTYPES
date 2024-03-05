@@ -2,9 +2,7 @@
 d <- formals(table_to_numeric)
 
 tab <- load_hapmap()
-# debug(table_to_numeric)
-# table_to_numeric(tab, method = "frequency")
-# undebug(table_to_numeric)
+meta_cols <- c("snp", "alleles", "chrom", "pos", "cm")
 
 
 ####################
@@ -37,19 +35,13 @@ test_that("code_as invalid raises error", {
 })
 
 test_that("code as -101 has expected possible values", {
-  result <- table_to_numeric(tab, code_as = "-101")
-  if (colnames(result)[1] == "rs#") {
-    result <- result[, -c(1:11)]  # remove hapmap first cols
-  }
+  result <- table_to_numeric(tab, code_as = "-101", drop_extra_cols = T)
   possible_values <- sort(unique(unlist(as.vector(result))))
   expect_equal(possible_values, c(-1, 0, 1))
 })
 
 test_that("code as 012 has expected possible values", {
-  result <- table_to_numeric(tab, code_as = "012")
-  if (colnames(result)[1] == "rs#") {
-    result <- result[, -c(1:11)]  # remove hapmap first cols
-  }
+  result <- table_to_numeric(tab, code_as = "012", drop_extra_cols = T)
   possible_values <- sort(unique(unlist(as.vector(result))))
   expect_equal(possible_values, c(0, 1, 2))
 })
@@ -68,13 +60,9 @@ test_that("ref_allele invalid length raises error", {
   )
 })
 
-test_that("passing hapmap columns keeps hapmap columns if chosen to not drop", {
+test_that("passing hapmap columns keeps meta columns if chosen to not drop", {
   result <- table_to_numeric(tab, drop_extra_cols = F)
-  hapmap_cols <- c(
-    "rs#", "alleles", "chrom", "pos", "strand", "assembly#",
-    "center", "protLSID", "assayLSID", "panelLSID", "QCcode"
-  )
-  expect_in(hapmap_cols, colnames(result))
+  expect_in(meta_cols, colnames(result))
 })
 
 test_that("output class is data.frame", {

@@ -12,16 +12,16 @@ gds_to_numeric <- function(file, code_as = "-101") {
   }
   
   result <- data.frame(
-    snp.rs.id = rep(NA, n),
+    # snp.rs.id = rep(NA, n),
     snp.id = rep(NA, n),
     snp.allele = rep(NA, n),
     snp.chromosome = rep(NA, n),
     snp.position = rep(NA, n),
     cm = rep(NA, n)
   )
-  if ("snp.rs.id" %in% child_nodes) {
-    result$snp.rs.id <- gdsfmt::read.gdsn(gdsfmt::index.gdsn(genofile, "snp.rs.id"))
-  } 
+  # if ("snp.rs.id" %in% child_nodes) {
+  #   result$snp.rs.id <- gdsfmt::read.gdsn(gdsfmt::index.gdsn(genofile, "snp.rs.id"))
+  # } 
   if ("snp.id" %in% child_nodes) {
     result$snp.id <- gdsfmt::read.gdsn(gdsfmt::index.gdsn(genofile, "snp.id"))  
   }
@@ -34,7 +34,10 @@ gds_to_numeric <- function(file, code_as = "-101") {
   if ("snp.position" %in% child_nodes) {
     result$snp.position <- gdsfmt::read.gdsn(gdsfmt::index.gdsn(genofile, "snp.position"))  
   }
-  colnames(result) <- c("snp.rs.id", "snp.id", "allele", "chr", "pos", "cm")
+  colnames(result) <- c(
+    # "snp.rs.id", 
+    "snp", "allele", "chr", "pos", "cm"
+  )
   result <- cbind(result, tab_geno)
   
   # rename samples if they exist

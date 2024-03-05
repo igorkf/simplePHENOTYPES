@@ -24,7 +24,7 @@ table_to_numeric <- function(xx,
                              impute = "None",
                              method = "frequency",
                              verbose = FALSE,
-                             drop_extra_cols = TRUE) {
+                             drop_extra_cols = FALSE) {
   #---------------------------------------------------------------------------
   
   hapmap_cols <- c(
@@ -32,7 +32,7 @@ table_to_numeric <- function(xx,
     "center", "protLSID", "assayLSID", "panelLSID", "QCcode"
   )
   gdslike_cols <- c(
-    "snp.rs.id", "snp.id", "allele", "chr", "pos", "cm"
+    "snp", "allele", "chr", "pos", "cm"
   )
   extra_cols_set <- list(
     hapmap = hapmap_cols, 
@@ -95,9 +95,20 @@ table_to_numeric <- function(xx,
   xx_n <- t(xx_n)
   colnames(xx_n) <- cols
   if (has_extra_cols & drop_extra_cols == F) {
+    # if hapmap, output only some columns
+    if (all(hapmap_cols %in% colnames(left_data))) {
+      left_data <- modify_hapmap(left_data)
+    }
     xx_n <- cbind(left_data, xx_n)
   } else {
     xx_n <- as.data.frame(xx_n)
   }
   return(xx_n)
+}
+
+modify_hapmap <- function(tab) {
+  tab <- tab[, c("rs#", "alleles", "chrom", "pos")]
+  tab$cm <- NA
+  names(tab)[names(tab) == "rs#"] <- "snp"
+  return(tab)
 }
