@@ -9,17 +9,33 @@ genotypes <- function(geno_obj = NULL,
                       verbose = TRUE,
                       chr_prefix = "chr") {
   
-  meta_cols <- c("snp", "allele", "chr", "pos", "cm")
+  possible_meta_cols <- c(
+    "rs#", "alleles", "chrom", "pos", "strand", "assembly#",
+    "center", "protLSID", "assayLSID", "panelLSID", "QCcode",
+    "snp", "allele", "chr", "pos", "cm"
+  )
   
-  if (!is.null(geno_obj) & is.null(geno_path)) input <- geno_obj
-  if (is.null(geno_obj) & !is.null(geno_path)) input <- geno_path
   if (is.null(geno_obj) & is.null(geno_path)) stop("Pass \"geno_obj\" or \"geno_path\".")
   
-  # TODO: add case when table is already numeric
+  if (!is.null(geno_obj) & is.null(geno_path)) {
+    dosage <- get_dosage(geno_obj[, !colnames(geno_obj) %in% possible_meta_cols])
+    if (!is.numeric(dosage)) {
+      tab <- as_numeric(geno_obj, model = SNP_effect)
+    } else {
+      dosage_expected <- identical(dosage, c(-1, 0, 1))
+      if (!dosage_expected) {
+        dosage_str <- paste0(dosage, collapse = "")
+        stop(paste0("alleles are '", dosage_str, "' but '-101' was expected."))
+      }
+    }
+  }
   
-  tab <- as_numeric(input, model = SNP_effect, impute = SNP_impute)
-  meta <- tab[, meta_cols]
-  geno <- tab[, !colnames(tab) %in% meta_cols]
+  if (is.null(geno_obj) & !is.null(geno_path)) {
+    tab <- as_numeric(geno_path, model = SNP_effect)
+  }
+  
+  meta <- tab[, colnames(tab) %in% possible_meta_cols]
+  geno <- tab[, !colnames(tab) %in% possible_meta_cols]
   if (!is.null(maf_cutoff)) geno <- filter_maf(geno, maf_cutoff)
   
   # TODO: add imputation
@@ -31,15 +47,4 @@ genotypes <- function(geno_obj = NULL,
   #   out_name =  hmp$out_name,
   #   temp = hmp$temp
   # ))
-}
-
-filter_maf <- function(tab, cutoff) {
-  ns <- nrow(tab)
-  ss <- colSums(tab)
-  freq <- 0.5 * ss / ns
-  maf_matrix <- rbind(freq, 1 - freq, deparse.level = 0)
-  maf <- apply(maf_matrix, 2, min)
-  tab <- tab[-which(maf < cutoff), ]
-  rownames(tab) <- NULL
-  return(tab)
 }

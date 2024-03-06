@@ -22,3 +22,12 @@ test_that("not using geno_obj or geno_path raises an error", {
     "Pass \"geno_obj\" or \"geno_path\"."
   )
 })
+
+test_that("passing numerical data.frame with non-expected dosage raises an error", {
+  code_as <- "012"
+  tab <- as_numeric(tab, code_as = code_as)
+  expect_error(
+    genotypes(geno_obj = tab), 
+    paste0("alleles are '", code_as, "' but '-101' was expected.")
+  )
+})
