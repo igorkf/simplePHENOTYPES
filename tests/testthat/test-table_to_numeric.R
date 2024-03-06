@@ -2,7 +2,7 @@
 d <- formals(table_to_numeric)
 
 tab <- load_hapmap()
-meta_cols <- c("snp", "alleles", "chrom", "pos", "cm")
+meta_cols <- c("snp", "allele", "chr", "pos", "cm")
 
 
 ####################

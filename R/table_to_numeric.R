@@ -109,6 +109,6 @@ table_to_numeric <- function(xx,
 modify_hapmap <- function(tab) {
   tab <- tab[, c("rs#", "alleles", "chrom", "pos")]
   tab$cm <- NA
-  names(tab)[names(tab) == "rs#"] <- "snp"
+  colnames(tab) <- c("snp", "allele", "chr", "pos", "cm")
   return(tab)
 }
