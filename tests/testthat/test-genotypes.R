@@ -1,4 +1,4 @@
-hapmap_fn <- path <- system.file("test.hmp.txt", package = "simplePHENOTYPES")
+hapmap_fn <- system.file("test.hmp.txt", package = "simplePHENOTYPES")
 tab <- load_hapmap()
 
 

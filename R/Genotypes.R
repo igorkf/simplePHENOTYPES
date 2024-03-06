@@ -9,15 +9,20 @@ genotypes <- function(geno_obj = NULL,
                       verbose = TRUE,
                       chr_prefix = "chr") {
   
-  meta_cols <- c("snp", "alleles", "chrom", "pos", "cm")
+  meta_cols <- c("snp", "allele", "chr", "pos", "cm")
   
   if (!is.null(geno_obj) & is.null(geno_path)) input <- geno_obj
   if (is.null(geno_obj) & !is.null(geno_path)) input <- geno_path
-  if (is.null(geno_obj) & is.null(geno_path)) stop("Pass \"geno_obj\" or \"geno_path\".") 
+  if (is.null(geno_obj) & is.null(geno_path)) stop("Pass \"geno_obj\" or \"geno_path\".")
+  
+  # TODO: add case when table is already numeric
+  
   tab <- as_numeric(input, model = SNP_effect, impute = SNP_impute)
   meta <- tab[, meta_cols]
   geno <- tab[, !colnames(tab) %in% meta_cols]
   if (!is.null(maf_cutoff)) geno <- filter_maf(geno, maf_cutoff)
+  
+  # TODO: add imputation
   
   return(geno)
   # return(list(

@@ -22,7 +22,7 @@ as_numeric <- function(x, ...) {
     cols <- colnames(x)
     
     # try to guess data structure
-    if (cols[1] %in% c("rs#", "snp.rs.id")) {
+    if (cols[1] %in% c("rs#", "snp.rs.id", "snp")) {
       result <- table_to_numeric(x, ...)
     } else {
       result <- withCallingHandlers(
