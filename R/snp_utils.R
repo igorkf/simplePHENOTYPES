@@ -61,7 +61,7 @@ make_numeric <- function(a,
   return(a)
 }
 
-impute <- function(x, method, AA = NULL, Aa = NULL, aa = NULL) {
+impute <- function(x, method, AA = 1, Aa = 0, aa = 1) {
   msg <- "Please consider specialized software for more accurate genotype imputation."
   rlang::inform(msg, .frequency = "once", .frequency_id = msg)
   na <- is.na(x)
@@ -74,5 +74,5 @@ impute <- function(x, method, AA = NULL, Aa = NULL, aa = NULL) {
       x[na] <- AA
     }
   }
-  return(a)
+  return(x)
 }

@@ -29,7 +29,7 @@ test_that("verbose shows message", {
 test_that("code_as invalid raises error", {
   expect_error(
     table_to_numeric(tab, code_as = "123456789"), 
-    "^\'code_as\' should be either \"-101\" or \"012\".$"
+    "^'code_as' should be either '-101' or '012'.$"
   )
 })
 
@@ -48,7 +48,7 @@ test_that("code as 012 has expected possible values", {
 test_that("method invalid raises error", {
   expect_error(
     table_to_numeric(tab, method = "ABCDEFG"), 
-    "^\'method\' should be either \"frequency\" or \"reference\".$"
+    "^'method' should be either 'frequency' or 'reference'.$"
   )
 })
 

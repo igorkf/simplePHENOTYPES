@@ -55,7 +55,7 @@ table_to_numeric <- function(xx,
     Aa <- 1
     aa <- 0
   } else {
-    stop("\'code_as\' should be either \"-101\" or \"012\".")
+    stop("'code_as' should be either '-101' or '012'.")
   }
   if (method == "frequency") {
     xx_n <-  apply(xx, 1, function(o){
@@ -85,7 +85,7 @@ table_to_numeric <- function(xx,
                    aa = aa)
     })
   } else {
-    stop("\'method\' should be either \"frequency\" or \"reference\".")
+    stop("'method' should be either 'frequency' or 'reference'.")
   }
   xx_n <- t(xx_n)
   colnames(xx_n) <- cols
