@@ -15,7 +15,6 @@ test_that("default arguments match", {
   expect_equal(eval(d$hets), c("R", "Y", "S", "W", "K", "M", "AG", "CT", "CG", "AT", "GT", "AC"))
   expect_equal(eval(d$homo), c("A", "AA", "T", "TT", "C", "CC", "G", "GG"))
   expect_equal(d$model, "Add")
-  expect_equal(d$impute, "None")
   expect_equal(d$method, "frequency")
   expect_equal(d$verbose, FALSE)
 })

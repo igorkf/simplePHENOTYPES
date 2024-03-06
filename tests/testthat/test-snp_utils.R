@@ -20,7 +20,6 @@ test_that("non-biallelic SNP returns NA", {
         method = method,
         ref = d$ref_allele,
         model = d$model,
-        impute = d$impute,
         hets = eval(d$hets),
         homo = eval(d$homo),
         AA = d$AA,

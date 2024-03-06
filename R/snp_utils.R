@@ -1,13 +1,12 @@
 make_numeric <- function(a,
-                        method = NULL,
-                        ref = NULL,
-                        model = NULL,
-                        impute = NULL,
-                        hets = NULL,
-                        homo = NULL,
-                        AA = NULL,
-                        Aa = NULL,
-                        aa = NULL) {
+                         method = NULL,
+                         ref = NULL,
+                         model = NULL,
+                         hets = NULL,
+                         homo = NULL,
+                         AA = NULL,
+                         Aa = NULL,
+                         aa = NULL) {
   
   if (method == "frequency") {
     a[!a %in% c(homo, hets)] <- "[OTHER]"
@@ -29,21 +28,6 @@ make_numeric <- function(a,
     } else if (model == "Right") {
       a <- data.table::fifelse(a == "Aa" | a != names(which.max(count)), aa, AA)
     }
-    if (impute != "None") {
-      na <- is.na(a)
-      if (any(na)) {
-        if (impute == "Middle") {
-          a[na] <- Aa
-        } else if (impute == "Minor") {
-          a[na] <- aa
-        } else if (impute == "Major") {
-          a[na] <- AA
-        }
-      }
-      msg <- "Please consider specialized software for more accurate genotype imputation."
-      rlang::inform(msg, .frequency = "once", .frequency_id = msg)
-    }
-    return(a)
   } else if (method == "reference")  {
     a[!a %in% c(homo, hets)] <- "[OTHER]"
     count <- length(unique(a))
@@ -73,20 +57,22 @@ make_numeric <- function(a,
         a <- data.table::fifelse(a == ref, aa, AA)
       }
     }
-    if (impute != "None") {
-      na <- is.na(a)
-      if (any(na)) {
-        if (impute == "Middle") {
-          a[na] <- Aa
-        } else if (impute == "Minor") {
-          a[na] <- aa
-        } else if (impute == "Major") {
-          a[na] <- AA
-        }
-      }
-      msg <- "Please consider specialized software for more accurate genotype imputation."
-      rlang::inform(msg, .frequency = "once", .frequency_id = msg)
-    }
-    return(a)
   }
+  return(a)
+}
+
+impute <- function(x, method, AA = NULL, Aa = NULL, aa = NULL) {
+  msg <- "Please consider specialized software for more accurate genotype imputation."
+  rlang::inform(msg, .frequency = "once", .frequency_id = msg)
+  na <- is.na(x)
+  if (any(na)) {
+    if (method == "Middle") {
+      x[na] <- Aa
+    } else if (method == "Minor") {
+      x[na] <- aa
+    } else if (method == "Major") {
+      x[na] <- AA
+    }
+  }
+  return(a)
 }

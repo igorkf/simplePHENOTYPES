@@ -8,8 +8,6 @@
 #' The default is used for hapmap format.
 #' @param model options: Add (AA = 1, Aa = 0, aa = -1), Dom (AA = 0, Aa = 1, aa = 0),
 #'  Left (AA = 1, Aa = 1, aa = 0), Right (AA = 0, Aa = 1, aa = 1). Default is Add.
-#' @param impute simple imputation method. It replaces missing values by "Major",
-#' "Minor", and "Middle". The default is "None".
 #' @param method method to define what is the major allele. Default is "frequency",
 #' "reference" is another option. If reference is used, "ref_allele" must be provided.
 #' @return Corresponding numerical value
@@ -21,7 +19,6 @@ table_to_numeric <- function(xx,
                              hets = c("R", "Y", "S", "W", "K", "M", "AG", "CT", "CG", "AT", "GT", "AC"),
                              homo = c("A", "AA", "T", "TT", "C", "CC", "G", "GG"),
                              model = "Add",
-                             impute = "None",
                              method = "frequency",
                              verbose = FALSE,
                              drop_extra_cols = FALSE) {
@@ -65,7 +62,6 @@ table_to_numeric <- function(xx,
       make_numeric(a = o,
                    method = method,
                    model = model,
-                   impute = impute,
                    hets = hets,
                    homo = homo,
                    AA = AA,
@@ -82,7 +78,6 @@ table_to_numeric <- function(xx,
                    ref = i[["reference_allele"]],
                    method = method,
                    model = model,
-                   impute = impute,
                    hets = hets,
                    homo = homo,
                    AA = AA,
