@@ -15,7 +15,7 @@ genotypes <- function(geno_obj = NULL,
     "snp", "allele", "chr", "pos", "cm"
   )
   
-  if (is.null(geno_obj) & is.null(geno_path)) stop("Pass \"geno_obj\" or \"geno_path\".")
+  if (is.null(geno_obj) & is.null(geno_path)) stop("Pass 'geno_obj' or 'geno_path'.")
   
   if (!is.null(geno_obj) & is.null(geno_path)) {
     dosage <- get_dosage(geno_obj[, !colnames(geno_obj) %in% possible_meta_cols])
@@ -36,9 +36,12 @@ genotypes <- function(geno_obj = NULL,
   
   meta <- tab[, colnames(tab) %in% possible_meta_cols]
   geno <- tab[, !colnames(tab) %in% possible_meta_cols]
+  
+  # MAF filtering
   if (!is.null(maf_cutoff)) geno <- filter_maf(geno, maf_cutoff)
   
-  # TODO: add imputation
+  # imputation
+  if (!is.null(SNP_impute)) geno <- impute(geno, method = SNP_impute)
   
   return(geno)
   # return(list(

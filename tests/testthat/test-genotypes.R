@@ -19,7 +19,7 @@ test_that("MAF filters SNPs from the data", {
 test_that("not using geno_obj or geno_path raises an error", {
   expect_error(
     genotypes(geno_obj = NULL, geno_path = NULL), 
-    "Pass \"geno_obj\" or \"geno_path\"."
+    "Pass 'geno_obj' or 'geno_path'."
   )
 })
 
@@ -30,4 +30,12 @@ test_that("passing numerical data.frame with non-expected dosage raises an error
     genotypes(geno_obj = tab), 
     paste0("alleles are '", code_as, "' but '-101' was expected.")
   )
+})
+
+test_that("imputing method Middle returns non-NA genotypes", {
+  # create some NAs
+  tab[1:3, 13:16] <- NA
+  tab[5:7, 15:18] <- NA
+  result <- genotypes(geno_obj = tab, SNP_impute = "Middle")
+  expect_equal(all(!is.na(result)), TRUE)
 })
