@@ -7,44 +7,41 @@ make_numeric <- function(a,
                          AA = NULL,
                          Aa = NULL,
                          aa = NULL) {
-  
+
+  a[!a %in% c(homo, hets)] <- NA
+  if (NA %in% a) {
+    message("SNP has NAs. Returning NA.")
+    a <- rep(NA, length(a))
+    return(a)
+  }
+
+  a <- as.factor(a)
+
   if (method == "frequency") {
-    a[!a %in% c(homo, hets)] <- "[OTHER]"
-    a <- as.factor(a)
     count <- tabulate(a)
     names(count) <- levels(a)
-    if (length(count) > 3 | "[OTHER]" %in% a) {
-      message("non-biallelic SNP set to NA")
-      a <- NA
-      return(a)
-    }
-    count <- count[!names(count) %in% hets]
+    count_homo <- count[names(count) %in% homo]
+    mode_homo <- names(which.max(count))
     if (model == "Add") {
-      a <- data.table::fifelse(a %in% hets, Aa, data.table::fifelse(a == names(which.max(count)), AA,aa))
+      a <- data.table::fifelse(a %in% hets, Aa, data.table::fifelse(a == mode_homo, AA, aa))
     } else if (model == "Dom") {
-      a <- data.table::fifelse(a == "Aa", Aa, AA)
+      a <- data.table::fifelse(a %in% hets, Aa, AA)
     } else if (model == "Left") {
-      a <- data.table::fifelse(a == "Aa" | a == names(which.max(count)), AA,aa)
+      a <- data.table::fifelse(a %in% hets | a == mode_homo, AA, aa)
     } else if (model == "Right") {
-      a <- data.table::fifelse(a == "Aa" | a != names(which.max(count)), aa, AA)
+      a <- data.table::fifelse(a %in% hets | a != mode_homo, aa, AA)
     }
   } else if (method == "reference")  {
-    a[!a %in% c(homo, hets)] <- "[OTHER]"
-    count <- length(unique(a))
-    if (count > 3 | "[OTHER]" %in% a) {
-      message("non-biallelic SNP set to NA")
-      a <- NA
-      return(a)
-    }
     if (any(homo %in% c("0/0", "0|0", "1/1", "1|1"))) {
+      a_is_one <- (a == "1/1" | a == "1|1")
       if (model == "Add") {
-        a <- data.table::fifelse(a == "1/1" | a == "1|1", AA, data.table::fifelse(a %in% hets, Aa, aa))
+        a <- data.table::fifelse(a_is_one, AA, data.table::fifelse(a %in% hets, Aa, aa))
       } else if (model == "Dom") {
-        a <- data.table::fifelse(a == "1/1" | a == "1|1", AA, Aa)
+        a <- data.table::fifelse(a_is_one, AA, Aa)
       } else if (model == "Left") {
-        a <- data.table::fifelse(a == "1/1" | a == "1|1", AA, aa)
+        a <- data.table::fifelse(a_is_one, AA, aa)
       } else if (model == "Right") {
-        a <- data.table::fifelse(a == "1/1" | a == "1|1", aa, AA)
+        a <- data.table::fifelse(a_is_one, aa, AA)
       }
     } else {
       if (model == "Add") {
@@ -58,6 +55,12 @@ make_numeric <- function(a,
       }
     }
   }
+
+  if (length(unique(a)) > 3) {
+    message("Non-biallelic SNP. Returning NA.")
+    a <- rep(NA, length(a))
+  }
+
   return(a)
 }
 

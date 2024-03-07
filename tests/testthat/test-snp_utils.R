@@ -2,32 +2,93 @@
 d <- formals(table_to_numeric)
 
 tab <- load_hapmap()[-c(1:11)]  # remove hapmap meta columns
+snp <- unlist(tab[1, ])  # just first SNP
 
 
 ################
 # make_numeric #
 ################
 
-test_that("non-biallelic SNP returns NA", {
-  for (method in c("frequency", "reference")) {
-    set.seed(1)
-    snp <- unlist(tab[1, ])  # only first SNP
-    random_idxs <- sample(1:length(snp), size = as.integer(length(snp) / 2))
-    snp[random_idxs] <- "ABCDEFG"
-    expect_message(
-      result <- make_numeric(
-        snp,
-        method = method,
-        ref = d$ref_allele,
-        model = d$model,
-        hets = eval(d$hets),
-        homo = eval(d$homo),
-        AA = d$AA,
-        Aa = d$Aa,
-        aa = d$aa
-      ),
-      "non-biallelic SNP set to NA"
-    )
-    expect_equal(result, NA)
-  }
+test_that("SNP with any NA returns everything as NAs", {
+  snp[10:20] <- NA
+  result <- make_numeric(
+    snp,
+    method = d$frequency,
+    ref = NULL,
+    model = d$model,
+    hets = eval(d$hets),
+    homo = eval(d$homo),
+    AA = 1,
+    Aa = 0,
+    aa = -1
+  )
+  expect_equal(all(is.na(result)), TRUE)
 })
+
+test_that("model Add returns expected dosage with method frequency", {
+  result <- make_numeric(
+      snp,
+      method = "frequency",
+      ref = NULL,
+      model = "Add",
+      hets = eval(d$hets),
+      homo = eval(d$homo),
+      AA = 1,
+      Aa = 0,
+      aa = -1
+  )
+  possible_values <- sort(unique(result))
+  expect_identical(possible_values, c(-1, 0, 1))
+})
+
+test_that("model Dom returns expected dosage with method frequency", {
+  result <- make_numeric(
+    snp,
+    method = "frequency",
+    ref = NULL,
+    model = "Dom",
+    hets = eval(d$hets),
+    homo = eval(d$homo),
+    AA = 1,
+    Aa = 0,
+    aa = -1
+  )
+  possible_values <- sort(unique(result))
+  expect_identical(possible_values, c(0, 1))
+})
+
+test_that("model Left returns expected dosage with method frequency", {
+  result <- make_numeric(
+    snp,
+    method = "frequency",
+    ref = NULL,
+    model = "Left",
+    hets = eval(d$hets),
+    homo = eval(d$homo),
+    AA = 1,
+    Aa = 0,
+    aa = -1
+  )
+  possible_values <- sort(unique(result))
+  expect_identical(possible_values, c(-1, 1))
+})
+
+test_that("model Right returns expected dosage with method frequency", {
+  result <- make_numeric(
+    snp,
+    method = "frequency",
+    ref = NULL,
+    model = "Right",
+    hets = eval(d$hets),
+    homo = eval(d$homo),
+    AA = 1,
+    Aa = 0,
+    aa = -1
+  )
+  possible_values <- sort(unique(result))
+  expect_identical(possible_values, c(-1, 1))
+})
+
+# test_that("NA alleles return NA", {
+#   
+# })

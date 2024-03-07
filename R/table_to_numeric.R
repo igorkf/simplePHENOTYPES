@@ -58,7 +58,7 @@ table_to_numeric <- function(xx,
     stop("'code_as' should be either '-101' or '012'.")
   }
   if (method == "frequency") {
-    xx_n <-  apply(xx, 1, function(o){
+    xx_n <-  apply(xx, 1, function(o) {
       make_numeric(a = o,
                    method = method,
                    model = model,
