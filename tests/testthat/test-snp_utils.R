@@ -9,11 +9,10 @@ snp <- unlist(tab[1, ])  # just first SNP
 # make_numeric #
 ################
 
-test_that("SNP with any NA returns everything as NAs", {
-  snp[10:20] <- NA
+test_that("SNP with NAs maintains NAs", { 
   result <- make_numeric(
-    snp,
-    method = d$frequency,
+    replace(snp, 10:20, NA),
+    method = d$method,
     ref = NULL,
     model = d$model,
     hets = eval(d$hets),
@@ -22,7 +21,7 @@ test_that("SNP with any NA returns everything as NAs", {
     Aa = 0,
     aa = -1
   )
-  expect_equal(all(is.na(result)), TRUE)
+  expect_equal(any(is.na(result)), TRUE)
 })
 
 test_that("model Add returns expected dosage with method frequency", {
@@ -88,7 +87,3 @@ test_that("model Right returns expected dosage with method frequency", {
   possible_values <- sort(unique(result))
   expect_identical(possible_values, c(-1, 1))
 })
-
-# test_that("NA alleles return NA", {
-#   
-# })

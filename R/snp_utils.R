@@ -7,14 +7,8 @@ make_numeric <- function(a,
                          AA = NULL,
                          Aa = NULL,
                          aa = NULL) {
-
-  a[!a %in% c(homo, hets)] <- NA
-  if (NA %in% a) {
-    message("SNP has NAs. Returning NA.")
-    a <- rep(NA, length(a))
-    return(a)
-  }
-
+  
+  a[!na.omit(a) %in% c(homo, hets)] <- NA
   a <- as.factor(a)
 
   if (method == "frequency") {
@@ -56,7 +50,8 @@ make_numeric <- function(a,
     }
   }
 
-  if (length(unique(a)) > 3) {
+  if (length(unique(na.omit(a))) > 3) {
+    print('here')
     message("Non-biallelic SNP. Returning NA.")
     a <- rep(NA, length(a))
   }
@@ -64,7 +59,7 @@ make_numeric <- function(a,
   return(a)
 }
 
-impute <- function(x, method, AA = 1, Aa = 0, aa = 1) {
+impute <- function(x, method, AA = 1, Aa = 0, aa = -1) {
   msg <- "Please consider specialized software for more accurate genotype imputation."
   rlang::inform(msg, .frequency = "once", .frequency_id = msg)
   na <- is.na(x)

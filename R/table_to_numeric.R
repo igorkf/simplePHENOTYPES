@@ -1,6 +1,6 @@
 #' Converts character SNP genotype to numerical (-1, 0, 1) where 1 is the major allele
 #' @param xx table of genotypes.
-#' @param code_as how numeric genotypes should be coded. Eiter "-101" or "012".
+#' @param code_as how numeric genotypes should be coded. Either "-101" or "012".
 #' @param ref_allele a vector with the reference allele information
 #' @param hets a vector with the genotype code for all possible heterozigotes in the dataset.
 #' The default is used for hapmap format.
