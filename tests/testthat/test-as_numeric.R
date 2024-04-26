@@ -19,34 +19,34 @@ test_that("not accepted file extension returns error", {
 })
 
 test_that("hapmap file returns a data.frame", {
-  result <- as_numeric(hapmap_fn)
+  result <- as_numeric(hapmap_fn)$result
   expect_equal(inherits(result, "data.frame"), TRUE)
 })
 
 test_that("vcf file returns a data.frame", {
-  result <- as_numeric(vcf_fn)
+  result <- as_numeric(vcf_fn)$result
   expect_equal(inherits(result, "data.frame"), TRUE)
 })
 
 test_that("bed file returns a data.frame", {
-  result <- as_numeric(bed_fn)
+  result <- as_numeric(bed_fn)$result
   expect_equal(inherits(result, "data.frame"), TRUE)
 })
 
 test_that("ped file raises an error", {
-  result <- as_numeric(ped_fn)
+  result <- as_numeric(ped_fn)$result
   expect_equal(inherits(result, "data.frame"), TRUE)
 })
 
 test_that("SNPs data.frame object returns data.frame", {
   set.seed(1)
   tab <- sim_snps(nrows = 10, ncols = 50, AA = "AA", Aa = "AB", aa = "BB")
-  result <- as_numeric(tab, hets = c("AB"), homo = c("AA", "BB"))
+  result <- as_numeric(tab, hets = c("AB"), homo = c("AA", "BB"))$result
   expect_equal(inherits(result, "data.frame"), TRUE)
 })
 
 test_that("hapmap data.frame object returns data.frame", {
   tab <- data.table::fread(hapmap_fn, data.table = F)
-  result <- as_numeric(tab)
+  result <- as_numeric(tab)$result
   expect_equal(inherits(result, "data.frame"), TRUE)
 })
