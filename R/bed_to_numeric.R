@@ -24,8 +24,8 @@ bed_to_numeric <- function(file, ...) {
     result[, sample_cols] <- invert_dosage(result[, sample_cols], 0, 2)
   }
   
-  unlink(temp, force = TRUE)
-  return(result)
+  # unlink(temp, force = TRUE)
+  return(list(result = result, temp = temp))
 }
 
 invert_dosage <- function(tab, a, b) {

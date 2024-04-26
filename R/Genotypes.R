@@ -1,3 +1,20 @@
+#' Generate a numeric (dosage) HapMap file
+#' @keywords internal
+#' @param geno_obj = NULL,
+#' @param geno_path = NULL,
+#' @param nrows = Inf,
+#' @param na_string = "NA",
+#' @param prefix = NULL,
+#' @param maf_cutoff = NULL,
+#' @param SNP_effect = 'Add',
+#' @param SNP_impute = 'Middle',
+#' @param verbose = verbose
+#' @param chr_prefix = "chr"
+#' @return A numeric HapMap
+#' @author Samuel Fernandes and Alexander Lipka
+#' Last update: Apr 20, 2020
+#'
+#'------------------------------------------------------------------------------
 genotypes <- function(geno_obj = NULL,
                       geno_path = NULL,
                       nrows = Inf,
@@ -20,7 +37,7 @@ genotypes <- function(geno_obj = NULL,
   if (!is.null(geno_obj) & is.null(geno_path)) {
     dosage <- get_dosage(geno_obj[, !colnames(geno_obj) %in% possible_meta_cols])
     if (!is.numeric(dosage)) {
-      tab <- as_numeric(geno_obj, model = SNP_effect)
+      tab <- as_numeric(geno_obj, model = SNP_effect)$result
     } else {
       dosage_expected <- identical(dosage, c(-1, 0, 1))
       if (!dosage_expected) {
@@ -31,7 +48,8 @@ genotypes <- function(geno_obj = NULL,
   }
   
   if (is.null(geno_obj) & !is.null(geno_path)) {
-    tab <- as_numeric(geno_path, model = SNP_effect)
+    tab <- as_numeric(geno_path, model = SNP_effect)$result
+    temp <- NULL
   }
   
   meta <- tab[, colnames(tab) %in% possible_meta_cols]
@@ -42,12 +60,16 @@ genotypes <- function(geno_obj = NULL,
   
   # imputation
   if (!is.null(SNP_impute)) geno <- impute(geno, method = SNP_impute)
+
+  # if (grepl("\\.bed|\\.ped|\\.vcf", geno_path)) {
+  #    selected
+  # }
   
-  return(geno)
-  # return(list(
-  #   geno_obj = geno_obj,
-  #   input_format =  hmp$input_format,
-  #   out_name =  hmp$out_name,
-  #   temp = hmp$temp
-  # ))
+  # return(geno)
+  return(list(
+    geno_obj = geno
+    # input_format = hmp$input_format,
+    # out_name =  hmp$out_name,
+    # temp = hmp$temp
+  ))
 }

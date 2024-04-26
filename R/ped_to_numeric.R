@@ -9,6 +9,6 @@ ped_to_numeric <- function(file, ...) {
     verbose = FALSE
   )
   result <- gds_to_numeric(temp, ...)
-  unlink(temp, force = TRUE)
-  return(result)
+  # unlink(temp, force = TRUE)
+  return(list(result = result, temp = temp))
 }

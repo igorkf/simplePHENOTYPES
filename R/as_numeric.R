@@ -1,5 +1,5 @@
 #' @export
-#' @param x filename as a string or a data.frame object. If passing a data.frame, the rows must be individuals and the columns must be SNPs.
+#' @param x filename as a string or a data.frame object. If passing a data.frame, the rows must be SNP ids and the columns must be the individuals.
 as_numeric <- function(x, ...) {
   
   if (inherits(x, "character")) {
@@ -7,12 +7,19 @@ as_numeric <- function(x, ...) {
     if (endsWith(lower_x, ".hmp.txt")) {
       tab <- data.table::fread(x, data.table = F)
       result <- table_to_numeric(tab, ...)
+      temp <- NULL
     } else if (endsWith(lower_x, ".vcf")) {
-      result <- vcf_to_numeric(x, ...)
+      r <- vcf_to_numeric(x, ...)
+      result <- r$result
+      temp <- r$temp
     } else if (endsWith(lower_x, ".bed")) {
-      result <- bed_to_numeric(x, ...)
+      r <- bed_to_numeric(x, ...)
+      result <- r$result
+      temp <- r$temp
     } else if (endsWith(lower_x, ".ped")) {
-      result <- ped_to_numeric(x, ...)
+      r <- ped_to_numeric(x, ...)
+      result <- r$result
+      temp <- r$temp
     } else {
       ext <- tools::file_ext(x)
       stop(paste0("The extension \"", ext, "\" is not accepted."))
@@ -20,12 +27,13 @@ as_numeric <- function(x, ...) {
     
   } else if (inherits(x, "data.frame")) {
     cols <- colnames(x)
+    temp <- NULL
     
     # try to guess data structure
     if (cols[1] %in% c("rs#", "snp.rs.id", "snp")) {
       result <- table_to_numeric(x, ...)
     } else {
-      result <- withCallingHandlers(
+      with <- withCallingHandlers(
         warning = function(cnd) {
           warning(strwrap(prefix = " ", initial = "", 
           "Assuming the data.frame only contains SNPs.
@@ -33,10 +41,10 @@ as_numeric <- function(x, ...) {
            and the possible hetero and homozygote genotypes from the arguments
           \"hets\" and \"homo\"."))
         },
-        table_to_numeric(x, ...)
+        return(list(result = table_to_numeric(x, ...), temp = temp))
       )
     }
   }
   
-  return(result)
+  return(list(result = result, temp = temp))
 }
