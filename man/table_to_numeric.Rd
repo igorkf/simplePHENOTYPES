@@ -2,7 +2,7 @@
 % Please edit documentation in R/table_to_numeric.R
 \name{table_to_numeric}
 \alias{table_to_numeric}
-\title{Converts character SNP genotype to numerical (-1, 0, 1) were 1 is the major allele}
+\title{Converts character SNP genotype to numerical (-1, 0, 1) where 1 is the major allele}
 \usage{
 table_to_numeric(
   xx,
@@ -11,15 +11,15 @@ table_to_numeric(
   hets = c("R", "Y", "S", "W", "K", "M", "AG", "CT", "CG", "AT", "GT", "AC"),
   homo = c("A", "AA", "T", "TT", "C", "CC", "G", "GG"),
   model = "Add",
-  impute = "None",
   method = "frequency",
-  verbose = FALSE
+  verbose = FALSE,
+  drop_extra_cols = FALSE
 )
 }
 \arguments{
 \item{xx}{table of genotypes.}
 
-\item{code_as}{how numeric genotypes should be coded. Eiter "-101" or "012".}
+\item{code_as}{how numeric genotypes should be coded. Either "-101" or "012".}
 
 \item{ref_allele}{a vector with the reference allele information}
 
@@ -32,16 +32,15 @@ The default is used for hapmap format.}
 \item{model}{options: Add (AA = 1, Aa = 0, aa = -1), Dom (AA = 0, Aa = 1, aa = 0),
 Left (AA = 1, Aa = 1, aa = 0), Right (AA = 0, Aa = 1, aa = 1). Default is Add.}
 
-\item{impute}{simple imputation method. It replaces missing values by "Major",
-"Minor", and "Middle". The default is "None".}
-
 \item{method}{method to define what is the major allele. Default is "frequency",
 "reference" is another option. If reference is used, "ref_allele" must be provided.}
+
+\item{drop_extra_cols}{Default is FALSE.}
 }
 \value{
 Corresponding numerical value
 Last update: Sep 29, 2021
 }
 \description{
-Converts character SNP genotype to numerical (-1, 0, 1) were 1 is the major allele
+Converts character SNP genotype to numerical (-1, 0, 1) where 1 is the major allele
 }

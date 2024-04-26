@@ -51,7 +51,6 @@ make_numeric <- function(a,
   }
 
   if (length(unique(na.omit(a))) > 3) {
-    print('here')
     message("Non-biallelic SNP. Returning NA.")
     a <- rep(NA, length(a))
   }

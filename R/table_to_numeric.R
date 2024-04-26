@@ -10,6 +10,7 @@
 #'  Left (AA = 1, Aa = 1, aa = 0), Right (AA = 0, Aa = 1, aa = 1). Default is Add.
 #' @param method method to define what is the major allele. Default is "frequency",
 #' "reference" is another option. If reference is used, "ref_allele" must be provided.
+#' @param drop_extra_cols Default is FALSE.
 #' @return Corresponding numerical value
 #' Last update: Sep 29, 2021
 #---------------------------------------------------------------------------
