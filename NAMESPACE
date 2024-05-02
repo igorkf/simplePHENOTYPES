@@ -2,7 +2,6 @@
 
 export(as_numeric)
 export(create_phenotypes)
-export(format_conversion)
 export(vQTL)
 import(stats)
 import(utils)

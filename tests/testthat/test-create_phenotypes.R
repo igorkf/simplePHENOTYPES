@@ -19,6 +19,19 @@ all(SNP55K_maize282$rs == SNP55K_maize282_maf04$snp)
 # constants for tests
 geno_path <- "inst"
 
+debug(create_phenotypes)
+results <- create_phenotypes(
+  geno_obj = SNP55K_maize282,
+  add_QTN_num = 3,
+  add_effect = 0.2,
+  big_add_QTN_effect = 0.9,
+  rep = 10,
+  h2 = 0.7,
+  model = "A",
+  home_dir = tempdir()
+)
+
+
 #####################
 # create_phenotypes #
 #####################

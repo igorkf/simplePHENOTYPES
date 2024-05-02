@@ -392,29 +392,31 @@ create_phenotypes <-
       out_name <- NULL
       if (!is.null(geno_obj)) {
         out_name <- deparse(substitute(geno_obj))
-        }
+      }
       if (!is.null(geno_path) | !is.null(geno_file) | nonnumeric) {
         geno_obj <-
           genotypes(
             geno_obj = geno_obj,
             geno_path = geno_path,
-            geno_file = geno_file,
+            # geno_file = geno_file,
             nrows = nrows,
             na_string = na_string,
             prefix = prefix,
             maf_cutoff = maf_cutoff,
+            SNP_effect = SNP_effect,
             SNP_impute = SNP_impute,
             verbose = verbose,
             chr_prefix = chr_prefix
           )
         input_format <- geno_obj$input_format
         temp <- geno_obj$temp
-        if (is.null(out_name))  out_name <- geno_obj$out_name
-        geno_obj <-  geno_obj$geno_obj
+        if (is.null(out_name)) {
+          out_name <- geno_obj$out_name
+          geno_obj <-  geno_obj$geno_obj
+        }
       } else {
         temp <- tempfile(pattern = "", fileext = ".gds")
-        if (verbose)
-          message(paste0("File ", "\'", out_name,"\'", " loaded from memory."))
+        if (verbose) message(paste0("File ", "\'", out_name,"\'", " loaded from memory."))
         dose <- 0
         counter <- 6
         while (all(dose != 2) & all(dose != -1)) {

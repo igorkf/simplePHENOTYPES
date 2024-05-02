@@ -34,11 +34,17 @@ genotypes <- function(geno_obj = NULL,
   
   if (is.null(geno_obj) & is.null(geno_path)) stop("Pass 'geno_obj' or 'geno_path'.")
   
+  # if passing a geno_obj
   if (!is.null(geno_obj) & is.null(geno_path)) {
+    input_format <- NULL
+    temp <- NULL
     dosage <- get_dosage(geno_obj[, !colnames(geno_obj) %in% possible_meta_cols])
     if (!is.numeric(dosage)) {
-      tab <- as_numeric(geno_obj, model = SNP_effect)$result
+      r <- as_numeric(geno_obj, model = SNP_effect)
+      tab <- r$result
+      out_name <- paste0(deparse(substitute(geno_obj)), "_numeric.txt")
     } else {
+      tab <- geno_obj
       dosage_expected <- identical(dosage, c(-1, 0, 1))
       if (!dosage_expected) {
         dosage_str <- paste0(dosage, collapse = "")
@@ -47,9 +53,19 @@ genotypes <- function(geno_obj = NULL,
     }
   }
   
+  # if passing a geno_path
   if (is.null(geno_obj) & !is.null(geno_path)) {
-    tab <- as_numeric(geno_path, model = SNP_effect)$result
-    temp <- NULL
+    r <- as_numeric(geno_path, model = SNP_effect)
+    tab <- r$result
+    input_format <- tools::file_ext(geno_path)  # does not capture multiple-dots extensions such as hmp.txt
+    if (grepl("\\.hmp\\.txt", geno_path)) {
+      input_format <- paste0("hmp.", input_format)
+      temp <- NULL
+      out_name = sub("\\.hmp\\.txt", ".txt", geno_path)
+    } else {
+      temp <- r$temp
+      out_name = sub(input_format, ".txt", geno_path)
+    }
   }
   
   meta <- tab[, colnames(tab) %in% possible_meta_cols]
@@ -60,16 +76,13 @@ genotypes <- function(geno_obj = NULL,
   
   # imputation
   if (!is.null(SNP_impute)) geno <- impute(geno, method = SNP_impute)
-
-  # if (grepl("\\.bed|\\.ped|\\.vcf", geno_path)) {
-  #    selected
-  # }
   
   # return(geno)
+  # TODO: check returns
   return(list(
-    geno_obj = geno
-    # input_format = hmp$input_format,
-    # out_name =  hmp$out_name,
-    # temp = hmp$temp
+    geno_obj = geno,
+    input_format = input_format,
+    out_name =  out_name,
+    temp = temp
   ))
 }
